@@ -29,7 +29,7 @@ const suggestWord = (words, wordLength, greyLetters, yellowLetters, greenLetters
 
   // Calculate top n letters
   const topLetters = [...totalCount].sort((a, b) => b[1] - a[1])
-    .slice(0, Math.min(wordLength * 2, 9))
+    .slice(0, Math.min(wordLength * 2, 8))
     .map(e => e[0])
     .join("")
   
