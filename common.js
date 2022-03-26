@@ -1,4 +1,4 @@
-const startingWord = "sorel"
+const startingWord = "salet"
 
 const suggestWord = (words, greyLetters, yellowLetters, greenLetters) => {
   if (greyLetters.size === 0 && Object.keys(yellowLetters).length === 0) return startingWord
