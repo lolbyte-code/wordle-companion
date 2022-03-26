@@ -34,3 +34,7 @@ blest
 ❯ node wordle.js tares yrryy spite yrryy goest rrggg blest rrggg
 chest
 ```
+
+## Stats
+
+Average guesses: 5.25
