@@ -41,7 +41,7 @@ const isGoodGuess = (word, yellowLetters, greenLetters) => {
   for (let i = 0; i < word.length; i++) {
     const letter = word[i]
     // If word doesn't have green letter in right place, bad guess
-    if (!(greenLetters.every((_, idx) =>  greenLetters[idx] === '' || word[idx] === greenLetters[idx]))) {
+    if (!(greenLetters.every((_, idx) => greenLetters[idx] === '' || word[idx] === greenLetters[idx]))) {
       return false
     }
     // If word guesses yellow letter in same place, bad guess
@@ -56,7 +56,7 @@ const isGoodGuess = (word, yellowLetters, greenLetters) => {
 
 const gradeWord = (word, target) => {
   let output = ""
-  for(let i = 0; i < word.length; i++) {
+  for (let i = 0; i < word.length; i++) {
     if (word[i] === target[i]) output += 'g'
     else if (target.indexOf(word[i]) >= 0) output += 'y'
     else output += 'r'
