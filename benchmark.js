@@ -40,8 +40,16 @@ function main(target) {
 
 let totalGuesses = 0
 let wordCount = 0
+let min = ["", 1000]
+let max = ["", 0]
 words.allWords.split(',').forEach(word => {
   let guesses = main(word)
+  if (guesses < min[1]) {
+    min = [word, guesses]
+  }
+  if (guesses > max[1]) {
+    max = [word, guesses]
+  }
   if (guesses > -1) {
     totalGuesses += guesses
     wordCount++
@@ -49,6 +57,8 @@ words.allWords.split(',').forEach(word => {
     console.error("Invalid word!")
   }
 })
+console.log(`Hardest Word: ${max}`)
+console.log(`Easiest Word: ${min}`)
 console.log(`Total Guesses: ${totalGuesses}`)
 console.log(`Total Words: ${wordCount}`)
 console.log(`Average Guesses: ${totalGuesses / wordCount}`)
