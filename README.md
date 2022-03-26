@@ -1,12 +1,10 @@
 # Wordle Solver
 
-CLI Wordle solver. Outputs a guess based on previous guesses.
+Various CLI utilities for Wordle.
 
-## Usage
+## Solver
 
-```bash
-❯ node wordle.js <word> <green/grey/yellow letters>
-```
+You can indicate previous guesses using the following mapping:
 
 | Letter | Meaning       |
 | ------ | ------------- |
@@ -14,27 +12,37 @@ CLI Wordle solver. Outputs a guess based on previous guesses.
 | y      | yellow letter |
 | r      | grey letter   |
 
-## Example
+```bash
+❯ node solver.js
+sorel
+
+❯ node solver.js sorel yrryr
+haets
+
+❯ node solver.js sorel yrryr haets yrgyy
+these
+
+❯ node solver.js sorel yrryr haets yrgyy these ygggy
+chest
+```
+
+## Reverse Solver
 
 Target answer: chest
 
 ```bash
-❯ node wordle.js
-tares
-
-❯ node wordle.js tares yrryy
-spite
-
-❯ node wordle.js tares yrryy spite yrryy
-goest
-
-❯ node wordle.js tares yrryy spite yrryy goest rrggg
-blest
-
-❯ node wordle.js tares yrryy spite yrryy goest rrggg blest rrggg
+❯ node reverse.js chest
+sorel
+haets
+these
 chest
 ```
 
-## Stats
+## Benchmark
 
-Average guesses: 5.25
+```bash
+❯ node benchmark.js
+Total Guesses: 64713
+Total Words: 12972
+Average Guesses: 4.988667900092507
+```
