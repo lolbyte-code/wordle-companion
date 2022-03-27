@@ -1,8 +1,14 @@
-# Wordle Solver
+# Wordle Helper
 
-Various CLI utilities for Wordle.
+Contains a web extension for helping you solve Wordle on the site and a set of CLI utilities.
 
-## Solver
+## Web Extension
+
+![wordle helper extension](./extension.png)
+
+## CLI Utilities
+
+### Solver
 
 You can indicate previous guesses using the following mapping:
 
@@ -13,35 +19,35 @@ You can indicate previous guesses using the following mapping:
 | r      | grey letter   |
 
 ```bash
-❯ node solver.js
+❯ node cli/cli/solver.js
 sorel
 
-❯ node solver.js sorel yrryr
+❯ node cli/solver.js sorel yrryr
 haets
 
-❯ node solver.js sorel yrryr haets yrgyy
+❯ node cli/solver.js sorel yrryr haets yrgyy
 these
 
-❯ node solver.js sorel yrryr haets yrgyy these ygggy
+❯ node cli/solver.js sorel yrryr haets yrgyy these ygggy
 chest
 ```
 
-## Reverse Solver
+### Reverse Solver
 
 Target answer: chest
 
 ```bash
-❯ node reverse.js chest
+❯ node cli/reverse.js chest
 sorel
 haets
 these
 chest
 ```
 
-## Benchmark
+### Benchmark
 
 ```bash
-❯ node benchmark.js
+❯ node cli/benchmark.js
 Total Guesses: 64713
 Total Words: 12972
 Average Guesses: 4.988667900092507
