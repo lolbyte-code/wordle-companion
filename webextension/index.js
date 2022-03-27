@@ -11,10 +11,9 @@ let suggestionElement = {}
 let suggestionIdx = 0
 let solved = false
 let rowElements = []
-let startingWord = defaultStartWord
 
 chrome.storage.sync.get({
-  startWord: defaultStartWord,
+  startWord: "slate",
 }, function (items) {
   startingWord = items.startWord;
 });
@@ -48,15 +47,19 @@ chrome.runtime.onMessage.addListener(
       if (greyLetters.has(letter)) greyLetters.delete(letter)
     })
 
-    const guesses = suggestWords(allWords.split(','), greyLetters, yellowLetters, greenLetters, startingWord)
-    if (guesses[0] === request.words[request.words.length - 1]) {
-      document.getElementById("buttons").style.display = 'none'
-      solved = true
-    } else {
-      document.getElementById("buttons").style.display = 'block'
-      // TODO: impossible guess?
-      createWordSuggestion(guesses[0])
-    }
+    chrome.storage.sync.get({
+      easyMode: false,
+    }, function (items) {
+      const guesses = suggestWords(wordList(items.easyMode).split(','), greyLetters, yellowLetters, greenLetters, startingWord)
+      if (guesses[0] === request.words[request.words.length - 1]) {
+        document.getElementById("buttons").style.display = 'none'
+        solved = true
+      } else {
+        document.getElementById("buttons").style.display = 'block'
+        // TODO: impossible guess?
+        createWordSuggestion(guesses[0])
+      }
+    })
   }
 )
 
@@ -108,17 +111,21 @@ document.getElementById('next-word').addEventListener('click', nextWord)
 
 const suggestWord = (direction) => {
   if (solved) return
-  const guesses = suggestWords(allWords.split(','), greyLetters, yellowLetters, greenLetters, new Set())
-  suggestionIdx += direction
-  if (suggestionIdx < 0) {
-    suggestionIdx = guesses.length + suggestionIdx
-  }
-  if (suggestionIdx >= guesses.length) {
-    suggestionIdx = guesses.length - suggestionIdx
-  }
-  document.getElementById("board").removeChild(suggestionElement)
-  // TODO: impossible guess?
-  createWordSuggestion(guesses[suggestionIdx] || guesses[0])
+  chrome.storage.sync.get({
+    easyMode: false,
+  }, function (items) {
+    const guesses = suggestWords(wordList(items.easyMode).split(','), greyLetters, yellowLetters, greenLetters, new Set())
+    suggestionIdx += direction
+    if (suggestionIdx < 0) {
+      suggestionIdx = guesses.length + suggestionIdx
+    }
+    if (suggestionIdx >= guesses.length) {
+      suggestionIdx = guesses.length - suggestionIdx
+    }
+    document.getElementById("board").removeChild(suggestionElement)
+    // TODO: impossible guess?
+    createWordSuggestion(guesses[suggestionIdx] || guesses[0])
+  })
 }
 
 const tryWord = () => {
