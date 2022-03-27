@@ -118,7 +118,7 @@ const suggestWord = (direction) => {
   }
   document.getElementById("board").removeChild(suggestionElement)
   // TODO: impossible guess?
-  createWordSuggestion(guesses[suggestionIdx])
+  createWordSuggestion(guesses[suggestionIdx] || guesses[0])
 }
 
 const tryWord = () => {
