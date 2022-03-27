@@ -11,10 +11,10 @@ let suggestionElement = {}
 let suggestionIdx = 0
 let solved = false
 let rowElements = []
-let startingWord = "salet"
+let startingWord = defaultStartWord
 
 chrome.storage.sync.get({
-  startWord: "salet",
+  startWord: defaultStartWord,
 }, function (items) {
   startingWord = items.startWord;
 });
