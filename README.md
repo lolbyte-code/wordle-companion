@@ -4,7 +4,7 @@ Contains a web extension for helping you solve Wordle on the site and a set of C
 
 ## Web Extension
 
-![wordle helper extension](./extension.png)
+![wordle helper extension](./demo.gif)
 
 ## CLI Utilities
 
