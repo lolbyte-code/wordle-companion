@@ -2,15 +2,20 @@ chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
   chrome.tabs.sendMessage(tabs[0].id, { type: "load" })
 })
 
-const greyLetters = new Set()
-const yellowLetters = {}
-const greenLetters = ['', '', '', '', '']
+const absentLetters = new Set()
+const presentLetters = {}
+const correctLetters = ['', '', '', '', '']
 
 let suggestion = ""
 let suggestionElement = {}
 let suggestionIdx = 0
 let solved = false
 let rowElements = []
+let bgColor = "#121213"
+let correct = "#618c55"
+let absent = "#3a3a3c"
+let present = "#b1a04c"
+let outline = "#d5d6da"
 
 chrome.storage.sync.get({
   startWord: "slate",
@@ -20,6 +25,27 @@ chrome.storage.sync.get({
 
 chrome.runtime.onMessage.addListener(
   function (request, _, _) {
+    const buttons = [...document.getElementsByTagName("button")]
+    if (!request.theme.includes("nightmode")) {
+      bgColor = "white"
+      absent = "#797c7e"
+      present = "#c6b466"
+      correct = "#79a86b"
+      outline = "#d5d6da"
+      buttons.forEach(e => e.className = "btn btn-secondary")
+    } else {
+      bgColor = "#121213"
+      correct = "#618c55"
+      absent = "#3a3a3c"
+      present = "#b1a04c"
+      outline = "#3a3a3c"
+      buttons.forEach(e => e.className = "btn btn-dark")
+    }
+    if (request.theme.includes("colorblind")) {
+      correct = "#e5804a"
+      present = "#92bef4"
+    }
+
     document.getElementById("board").remove()
     const board = document.createElement("div")
     board.id = "board"
@@ -32,25 +58,25 @@ chrome.runtime.onMessage.addListener(
     request.words.forEach ((word, i) => {
       word.split('').forEach ((letter, j) => {  
         if (request.evaluations[i][j] === 'absent') {
-          greyLetters.add(letter)
+          absentLetters.add(letter)
         } else if (request.evaluations[i][j] === 'present') {
-          let letters = yellowLetters[letter] || []
+          let letters = presentLetters[letter] || []
           letters.push(j)
-          yellowLetters[letter] = letters
+          presentLetters[letter] = letters
         } else {
-          greenLetters[j] = letter
+          correctLetters[j] = letter
         }
       })
     })
 
-    Object.keys(yellowLetters).forEach(letter => {
-      if (greyLetters.has(letter)) greyLetters.delete(letter)
+    Object.keys(presentLetters).forEach(letter => {
+      if (absentLetters.has(letter)) absentLetters.delete(letter)
     })
 
     chrome.storage.sync.get({
       easyMode: false,
     }, function (items) {
-      const guesses = suggestWords(wordList(items.easyMode).split(','), greyLetters, yellowLetters, greenLetters, startingWord)
+      const guesses = suggestWords(wordList(items.easyMode).split(','), absentLetters, presentLetters, correctLetters, startingWord)
       if (guesses[0] === request.words[request.words.length - 1]) {
         document.getElementById("buttons").style.display = 'none'
         solved = true
@@ -59,6 +85,26 @@ chrome.runtime.onMessage.addListener(
         // TODO: impossible guess?
         createWordSuggestion(guesses[0])
       }
+      document.body.style.backgroundColor = bgColor
+      const letterElements = [...document.querySelectorAll(".letter")]
+      letterElements.forEach(e => {
+        e.style.borderColor = outline
+      })
+      const correctElements = [...document.querySelectorAll(".correct")]
+      correctElements.forEach(e => {
+        e.style.backgroundColor = correct
+        e.style.borderColor = correct
+      })
+      const presentElements = [...document.querySelectorAll(".present")]
+      presentElements.forEach(e => {
+        e.style.backgroundColor = present
+        e.style.borderColor = present
+      })
+      const absentElements = [...document.querySelectorAll(".absent")]
+      absentElements.forEach(e => {
+        e.style.backgroundColor = absent
+        e.style.borderColor = absent
+      })
     })
   }
 )
@@ -70,13 +116,13 @@ const createWordElement = (word, evaluations) => {
   word.split('').forEach ((letter, idx) => {
     const letterElement = document.createElement("p")
     if (evaluations[idx] === 'present') {
-      letterElement.id = "yellow"
+      letterElement.className = "present"
     } else if (evaluations[idx] === 'correct') {
-      letterElement.id = "green"
+      letterElement.className = "correct"
     } else {
-      letterElement.id = "grey"
+      letterElement.className = "absent"
     }
-    letterElement.className = "letter"
+    letterElement.className = `${letterElement.className} letter`
     letterElement.innerHTML = letter.toUpperCase()
     rowElement.appendChild(letterElement)
   })
@@ -114,7 +160,7 @@ const suggestWord = (direction) => {
   chrome.storage.sync.get({
     easyMode: false,
   }, function (items) {
-    const guesses = suggestWords(wordList(items.easyMode).split(','), greyLetters, yellowLetters, greenLetters, new Set())
+    const guesses = suggestWords(wordList(items.easyMode).split(','), absentLetters, presentLetters, correctLetters, new Set())
     suggestionIdx += direction
     if (suggestionIdx < 0) {
       suggestionIdx = guesses.length + suggestionIdx

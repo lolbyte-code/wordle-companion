@@ -1,5 +1,5 @@
-const suggestWords = (words, greyLetters, yellowLetters, greenLetters, startingWord) => {
-  if (greyLetters.size === 0 && Object.keys(yellowLetters).length === 0) return [startingWord]
+const suggestWords = (words, absentLetters, presentLetters, correctLetters, startingWord) => {
+  if (absentLetters.size === 0 && Object.keys(presentLetters).length === 0) return [startingWord]
 
   const guesses = new Array()
   const positionalFrequency = new Map()
@@ -7,7 +7,7 @@ const suggestWords = (words, greyLetters, yellowLetters, greenLetters, startingW
     positionalFrequency.set(letter, Array.apply(null, Array(words[0].length)).map(function () { }))
   }
   for (let word of words) {
-    if ([...word].some(letter => greyLetters.has(letter))) continue
+    if ([...word].some(letter => absentLetters.has(letter))) continue
     guesses.push(word)
     for (let i = 0; i < word.length; i++) {
       const count = positionalFrequency.get(word[i])[i]
@@ -18,7 +18,7 @@ const suggestWords = (words, greyLetters, yellowLetters, greenLetters, startingW
       }
     }
   }
-  const allGuesses = guesses.filter(word => isGoodGuess(word, yellowLetters, greenLetters))
+  const allGuesses = guesses.filter(word => isGoodGuess(word, presentLetters, correctLetters))
   return allGuesses.sort((a, b) => {
     const scoreA = [...a].reduce((sum, letter, idx) => sum += positionalFrequency.get(letter)[idx], 0)
     const scoreB = [...b].reduce((sum, letter, idx) => sum += positionalFrequency.get(letter)[idx], 0)
@@ -26,20 +26,20 @@ const suggestWords = (words, greyLetters, yellowLetters, greenLetters, startingW
   })
 }
 
-const isGoodGuess = (word, yellowLetters, greenLetters) => {
-  const yellowLettersInWord = new Set()
+const isGoodGuess = (word, presentLetters, correctLetters) => {
+  const presentLettersInWord = new Set()
   for (let i = 0; i < word.length; i++) {
     const letter = word[i]
-    // If word doesn't have green letter in right place, bad guess
-    if (!(greenLetters.every((_, idx) => greenLetters[idx] === '' || word[idx] === greenLetters[idx]))) {
+    // If word doesn't have correct letter in right place, bad guess
+    if (!(correctLetters.every((_, idx) => correctLetters[idx] === '' || word[idx] === correctLetters[idx]))) {
       return false
     }
-    // If word guesses yellow letter in same place, bad guess
-    if (letter in yellowLetters) {
-      if (yellowLetters[letter].indexOf(i) !== -1) return false
-      yellowLettersInWord.add(letter)
+    // If word guesses present letter in same place, bad guess
+    if (letter in presentLetters) {
+      if (presentLetters[letter].indexOf(i) !== -1) return false
+      presentLettersInWord.add(letter)
     }
   }
-  // If word doesn't use all yellow letters, bad guess
-  return Object.keys(yellowLetters).length === yellowLettersInWord.size
+  // If word doesn't use all present letters, bad guess
+  return Object.keys(presentLetters).length === presentLettersInWord.size
 }

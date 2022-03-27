@@ -23,5 +23,9 @@ const updateExtension = () => {
   let evaluations = [...document.querySelector("game-app").shadowRoot.querySelector("game-theme-manager").querySelector("#game").querySelector("#board-container").querySelector("#board").querySelectorAll("game-row")].map(e => [...e.shadowRoot.querySelector(".row").querySelectorAll("game-tile")].map(f => f.getAttribute("evaluation")))
   // Don't count guess word
   let wordLimit = evaluations.filter(e => e[0] !== null).length
-  chrome.runtime.sendMessage({ words: words.slice(0, wordLimit), evaluations: evaluations.slice(0, wordLimit) })
+  chrome.runtime.sendMessage({ words: words.slice(0, wordLimit), evaluations: evaluations.slice(0, wordLimit), theme: getTheme() })
+}
+
+const getTheme = () => {
+  return document.body.className
 }
