@@ -1,4 +1,4 @@
-# Wordle Helper
+# Wordle Companion
 
 Contains a web extension for helping you solve Wordle on the site and a set of CLI utilities.
 
