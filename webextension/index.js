@@ -16,6 +16,7 @@ let correct = "#618c55"
 let absent = "#3a3a3c"
 let present = "#b1a04c"
 let outline = "#d5d6da"
+let suggestLetterColor = "white"
 
 chrome.storage.sync.get({
   startWord: "slate",
@@ -32,6 +33,7 @@ chrome.runtime.onMessage.addListener(
       present = "#c6b466"
       correct = "#79a86b"
       outline = "#d5d6da"
+      suggestLetterColor = "black"
       buttons.forEach(e => e.className = "btn btn-secondary")
     } else {
       bgColor = "#121213"
@@ -39,6 +41,7 @@ chrome.runtime.onMessage.addListener(
       absent = "#3a3a3c"
       present = "#b1a04c"
       outline = "#3a3a3c"
+      suggestLetterColor = "white"
       buttons.forEach(e => e.className = "btn btn-dark")
     }
     if (request.theme.includes("colorblind")) {
@@ -69,15 +72,17 @@ chrome.runtime.onMessage.addListener(
       })
     })
 
-    Object.keys(presentLetters).forEach(letter => {
-      if (absentLetters.has(letter)) absentLetters.delete(letter)
+    absentLetters.forEach(letter => {
+      if (Object.keys(presentLetters).includes(letter) || correctLetters.includes(letter)) {
+        absentLetters.delete(letter)
+      }
     })
 
     chrome.storage.sync.get({
       easyMode: false,
     }, function (items) {
       const guesses = suggestWords(wordList(items.easyMode).split(','), absentLetters, presentLetters, correctLetters, startingWord)
-      if (guesses[0] === request.words[request.words.length - 1]) {
+      if (request.words.length >= 6 || guesses[0] === request.words[request.words.length - 1]) {
         document.getElementById("buttons").style.display = 'none'
         solved = true
       } else {
@@ -138,6 +143,7 @@ const createWordSuggestion = (word) => {
     const letterElement = document.createElement("p")
     letterElement.className = "letter"
     letterElement.innerHTML = letter.toUpperCase()
+    letterElement.style.color = suggestLetterColor
     rowElement.appendChild(letterElement)
   })
   document.getElementById("board").appendChild(rowElement)
