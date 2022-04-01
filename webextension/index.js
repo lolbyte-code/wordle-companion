@@ -166,7 +166,7 @@ const suggestWord = (direction) => {
   chrome.storage.sync.get({
     easyMode: false,
   }, function (items) {
-    const guesses = suggestWords(wordList(items.easyMode).split(','), absentLetters, presentLetters, correctLetters, new Set())
+    const guesses = suggestWords(wordList(items.easyMode).split(','), absentLetters, presentLetters, correctLetters, startingWord)
     suggestionIdx += direction
     if (suggestionIdx < 0) {
       suggestionIdx = guesses.length + suggestionIdx
