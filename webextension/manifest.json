@@ -1,7 +1,7 @@
 {
     "name": "Wordle Companion",
-    "description": "Wordle Companion enables you to play Wordle by selecting guesses from a auto-generated list instead of typing guesses manually.",
-    "version": "1.1",
+    "description": "Wordle Companion enables you to play Wordle by selecting guesses from an auto-generated list instead of typing guesses manually.",
+    "version": "1.2",
     "manifest_version": 3,
     "permissions": [
         "storage"
