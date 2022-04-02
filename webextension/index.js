@@ -17,6 +17,7 @@ let absent = "#3a3a3c"
 let present = "#b1a04c"
 let outline = "#d5d6da"
 let suggestLetterColor = "white"
+let alreadyGuessed = new Set()
 
 chrome.storage.sync.get({
   startWord: "slate",
@@ -59,6 +60,7 @@ chrome.runtime.onMessage.addListener(
     )
 
     request.words.forEach ((word, i) => {
+      alreadyGuessed.add(word)
       word.split('').forEach ((letter, j) => {  
         if (request.evaluations[i][j] === 'absent') {
           absentLetters.add(letter)
@@ -81,8 +83,8 @@ chrome.runtime.onMessage.addListener(
     chrome.storage.sync.get({
       easyMode: false,
     }, function (items) {
-      const guesses = suggestWords(wordList(items.easyMode).split(','), absentLetters, presentLetters, correctLetters, startingWord)
-      if (request.words.length >= 6 || guesses[0] === request.words[request.words.length - 1]) {
+      const guesses = suggestWords(wordList(items.easyMode).split(','), absentLetters, presentLetters, correctLetters, startingWord, alreadyGuessed)
+      if (request.words.length >= 6 || correctLetters.every(letter => letter !== '')) {
         document.getElementById("buttons").style.display = 'none'
         solved = true
       } else {
@@ -166,7 +168,7 @@ const suggestWord = (direction) => {
   chrome.storage.sync.get({
     easyMode: false,
   }, function (items) {
-    const guesses = suggestWords(wordList(items.easyMode).split(','), absentLetters, presentLetters, correctLetters, startingWord)
+    const guesses = suggestWords(wordList(items.easyMode).split(','), absentLetters, presentLetters, correctLetters, startingWord, alreadyGuessed)
     suggestionIdx += direction
     if (suggestionIdx < 0) {
       suggestionIdx = guesses.length + suggestionIdx

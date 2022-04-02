@@ -1,4 +1,4 @@
-const suggestWords = (words, absentLetters, presentLetters, correctLetters, startingWord) => {
+const suggestWords = (words, absentLetters, presentLetters, correctLetters, startingWord, alreadyGuessed) => {
   if (absentLetters.size === 0 && Object.keys(presentLetters).length === 0) return [startingWord]
 
   const guesses = new Array()
@@ -7,6 +7,7 @@ const suggestWords = (words, absentLetters, presentLetters, correctLetters, star
     positionalFrequency.set(letter, Array.apply(null, Array(words[0].length)).map(function () { }))
   }
   for (let word of words) {
+    if (alreadyGuessed.has(word)) continue
     if ([...word].some(letter => absentLetters.has(letter))) continue
     guesses.push(word)
     for (let i = 0; i < word.length; i++) {
