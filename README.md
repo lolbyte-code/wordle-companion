@@ -4,6 +4,8 @@ Contains a web extension for helping you solve Wordle on the site and a set of C
 
 ## Web Extension
 
+Web Store Link: https://chrome.google.com/webstore/detail/wordle-companion/fajappoenpihanjjpnokmihlmehjfchp
+
 ![wordle helper extension](./demo.gif)
 
 ## CLI Utilities
