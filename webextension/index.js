@@ -28,7 +28,7 @@ chrome.storage.sync.get({
 chrome.runtime.onMessage.addListener(
   function (request, _, _) {
     const buttons = [...document.getElementsByTagName("button")]
-    if (!request.theme.includes("nightmode")) {
+    if (!request.theme.includes("dark")) {
       bgColor = "white"
       absent = "#797c7e"
       present = "#c6b466"
