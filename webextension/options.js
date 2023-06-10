@@ -1,5 +1,5 @@
 const defaultStartWord = "slate"
-const defaultEasyMode = false
+const defaultEasyMode = true
 
 function saveOptions() {
     let startWord = document.getElementById('start-word').value

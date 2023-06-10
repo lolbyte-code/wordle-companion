@@ -81,9 +81,12 @@ chrome.runtime.onMessage.addListener(
     })
 
     chrome.storage.sync.get({
-      easyMode: false,
+      easyMode: true,
     }, function (items) {
-      const guesses = suggestWords(wordList(items.easyMode).split(','), absentLetters, presentLetters, correctLetters, startingWord, alreadyGuessed)
+      var guesses = suggestWords(wordList(items.easyMode).split(','), absentLetters, presentLetters, correctLetters, startingWord, alreadyGuessed)
+      if (guesses.length === 0 && items.easyMode) {
+        guesses = suggestWords(wordList(false).split(','), absentLetters, presentLetters, correctLetters, startingWord, alreadyGuessed)
+      }
       if (request.words.length >= 6 || correctLetters.every(letter => letter !== '')) {
         document.getElementById("buttons").style.display = 'none'
         solved = true
@@ -166,9 +169,12 @@ document.getElementById('next-word').addEventListener('click', nextWord)
 const suggestWord = (direction) => {
   if (solved) return
   chrome.storage.sync.get({
-    easyMode: false,
+    easyMode: true,
   }, function (items) {
-    const guesses = suggestWords(wordList(items.easyMode).split(','), absentLetters, presentLetters, correctLetters, startingWord, alreadyGuessed)
+    var guesses = suggestWords(wordList(items.easyMode).split(','), absentLetters, presentLetters, correctLetters, startingWord, alreadyGuessed)
+    if (guesses.length === 0 && items.easyMode) {
+      guesses = suggestWords(wordList(false).split(','), absentLetters, presentLetters, correctLetters, startingWord, alreadyGuessed)
+    }
     suggestionIdx += direction
     if (suggestionIdx < 0) {
       suggestionIdx = guesses.length + suggestionIdx
