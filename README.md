@@ -8,6 +8,13 @@ Web Store Link: https://chrome.google.com/webstore/detail/wordle-companion/fajap
 
 ![wordle helper extension](./demo.gif)
 
+
+### Build
+
+```bash
+> web-ext build --source-dir=/path/to/wordle/webextension --artifacts-dir=/path/to/wordle/webextensio/build --overwrite-dest
+```
+
 ## CLI Utilities
 
 ### Solver
