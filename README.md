@@ -12,7 +12,7 @@ Web Store Link: https://chrome.google.com/webstore/detail/wordle-companion/fajap
 ### Build
 
 ```bash
-> web-ext build --source-dir=/path/to/wordle/webextension --artifacts-dir=/path/to/wordle/webextension/build --overwrite-dest
+> web-ext build --source-dir=/path/to/wordle/webextension --artifacts-dir=path/to/wordle/build --overwrite-dest
 ```
 
 ## CLI Utilities
