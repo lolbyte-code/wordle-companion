@@ -1,7 +1,7 @@
 {
     "name": "Wordle Companion",
     "description": "Wordle Companion enables you to play Wordle by selecting guesses from an auto-generated list instead of typing guesses manually.",
-    "version": "2.1",
+    "version": "2.2",
     "manifest_version": 3,
     "permissions": [
         "storage"
@@ -23,7 +23,7 @@
     "content_scripts": [
         {
             "matches": [
-                "https://www.nytimes.com/games/wordle/index.html"
+                "https://www.nytimes.com/games/wordle/*"
             ],
             "js": [
                 "content.js"

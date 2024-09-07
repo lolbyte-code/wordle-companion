@@ -22,9 +22,9 @@ chrome.runtime.onMessage.addListener(
 
 const updateExtension = () => {
   // 6 item array of each submitted word (e.g. ["slate", "black", "", "", "", ""])
-  let words = [...document.querySelector("#wordle-app-game").querySelector("div").querySelector("div").childNodes].map(e => e.childNodes).map(e => [...e].map(e => e.querySelector("div").innerHTML).join(""))
+  let words = [...document.querySelector("#wordle-app-game").querySelectorAll("div")[1].querySelector("div").childNodes].map(e => e.childNodes).map(e => [...e].map(e => e.querySelector("div").innerHTML).join(""))
   // 2D array representing evaluations of each guess (e.g. [["absent", "present", "correct", "correct", "absent"], ["tbd", "tbd", "tbd", "tbd", tbd"], ..., ["empty", "empty", "empty", "empty", "empty"]])
-  let evaluations = [...document.querySelector("#wordle-app-game").querySelector("div").querySelector("div").childNodes].map(n => n.childNodes).map(e => [...e].map(e => e.querySelector("div").getAttribute("data-state")))
+  let evaluations = [...document.querySelector("#wordle-app-game").querySelectorAll("div")[1].querySelector("div").childNodes].map(n => n.childNodes).map(e => [...e].map(e => e.querySelector("div").getAttribute("data-state")))
   // Don't count guess word
   let wordLimit = evaluations.filter(e => e[0] !== "tbd" && e[0] !== "empty").length
   chrome.runtime.sendMessage({ words: words.slice(0, wordLimit), evaluations: evaluations.slice(0, wordLimit), theme: getTheme() })
